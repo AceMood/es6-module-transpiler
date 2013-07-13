@@ -40,6 +40,11 @@ shouldCompileAMD = (input, output, options={}) ->
   [ output, compiler ] = normalize input, output, name, options
   expect(stripTrailingNewlines compiler.toAMD()).toEqual(output)
 
+shouldCompileUMD = (input, output, options={}) ->
+  name = if options.anonymous then null else 'jquery'
+  [ output, compiler ] = normalize input, output, name, options
+  expect(stripTrailingNewlines compiler.toUMD()).toEqual(output)
+
 shouldCompileCJS = (input, output, options={}) ->
   name = if options.anonymous then null else 'jquery'
   [ output, compiler ] = normalize input, output, name, options
@@ -221,4 +226,4 @@ class FakeFilesystem
     return null
 
 
-module.exports = { normalize, shouldCompileAMD, shouldCompileCJS, shouldCompileGlobals, shouldRaise, parseOptions, optionsShouldBeInvalid, shouldRunCLI }
+module.exports = { normalize, shouldCompileAMD, shouldCompileCJS, shouldCompileGlobals, shouldCompileUMD, shouldRaise, parseOptions, optionsShouldBeInvalid, shouldRunCLI }

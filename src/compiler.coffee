@@ -2,6 +2,7 @@ import AMDCompiler from './amd_compiler'
 import CJSCompiler from './cjs_compiler'
 import GlobalsCompiler from './globals_compiler'
 import { Unique } from './utils'
+import UMDCompiler from './umd_compiler'
 
 EXPORT = /^\s*export\s+(.*?)\s*(;)?\s*$/
 EXPORT_DEFAULT = /^\s*export\s*default\s*(.*?)\s*(;)?\s*$/
@@ -154,5 +155,9 @@ class Compiler
 
   toGlobals: ->
     new GlobalsCompiler(this, @options).stringify()
+
+  toUMD: ->
+    new UMDCompiler(this, @options).stringify()
+
 
 export default Compiler
