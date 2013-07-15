@@ -7,22 +7,26 @@ describe "Compiler (toUMD)", ->
 
       export default jQuery;
     """, """
-      (function (root, factory) {
+      (function(factory) {
         if (typeof define === 'function' && define.amd) {
-          define(function () {
-            return factory();
-          });
+          define("jquery",
+            [],
+            function() {
+              return factory();
+            });
         } else if (typeof exports === 'object') {
           module.exports = factory();
         } else {
-          root.jQuery = factory();
+          throw new Error('root UMD compilation not yet implemented');
         }
-      }(this, function () {
+      }(function() {
+        "use strict";
         var jQuery = function() { };
 
-        return {};
+        return jQuery;
       }));
     """
+
 
   it 'generates an export object if `export foo` is used', ->
     shouldCompileUMD """
@@ -30,15 +34,20 @@ describe "Compiler (toUMD)", ->
 
       export jQuery;
     """, """
-      (function (factory) {
+      (function(factory) {
         if (typeof define === 'function' && define.amd) {
-          define(['exports'], function (exports) {
-            factory(exports);
-          });
+          define("jquery",
+            ["exports"],
+            function(exports) {
+              factory(exports);
+            });
         } else if (typeof exports === 'object') {
           factory(exports);
+        } else {
+          throw new Error('root UMD compilation not yet implemented');
         }
-      }(function (exports) {
+      }(function(exports) {
+        "use strict";
         var jQuery = function() { };
 
         exports.jQuery = jQuery;
@@ -49,15 +58,20 @@ describe "Compiler (toUMD)", ->
     shouldCompileUMD """
       export function jQuery() { };
     """, """
-      (function (factory) {
+      (function(factory) {
         if (typeof define === 'function' && define.amd) {
-          define(['exports'], function (exports) {
-            factory(exports);
-          });
+          define("jquery",
+            ["exports"],
+            function(exports) {
+              factory(exports);
+            });
         } else if (typeof exports === 'object') {
           factory(exports);
+        } else {
+          throw new Error('root UMD compilation not yet implemented');
         }
-      }(function (exports) {
+      }(function(exports) {
+        "use strict";
         function jQuery() { };
         exports.jQuery = jQuery;
       }));
@@ -67,15 +81,20 @@ describe "Compiler (toUMD)", ->
     shouldCompileUMD """
       export var jQuery = function() { };
     """, """
-      (function (factory) {
+      (function(factory) {
         if (typeof define === 'function' && define.amd) {
-          define(['exports'], function (exports) {
-            factory(exports);
-          });
+          define("jquery",
+            ["exports"],
+            function(exports) {
+              factory(exports);
+            });
         } else if (typeof exports === 'object') {
           factory(exports);
+        } else {
+          throw new Error('root UMD compilation not yet implemented');
         }
-      }(function (exports) {
+      }(function(exports) {
+        "use strict";
         var jQuery = function() { };
         exports.jQuery = jQuery;
       }));
@@ -88,15 +107,20 @@ describe "Compiler (toUMD)", ->
 
       export { get, set };
     """, """
-      (function (factory) {
+      (function(factory) {
         if (typeof define === 'function' && define.amd) {
-          define(['exports'], function (exports) {
-            factory(exports);
-          });
+          define("jquery",
+            ["exports"],
+            function(exports) {
+              factory(exports);
+            });
         } else if (typeof exports === 'object') {
           factory(exports);
+        } else {
+          throw new Error('root UMD compilation not yet implemented');
         }
-      }(function (exports) {
+      }(function(exports) {
+        "use strict";
         var get = function() { };
         var set = function() { };
 
@@ -116,15 +140,20 @@ describe "Compiler (toUMD)", ->
     shouldCompileUMD """
       import { get, set } from "ember";
     """, """
-      (function (factory) {
+      (function(factory) {
         if (typeof define === 'function' && define.amd) {
-          define(['ember'], function (ember) {
-            factory(ember);
-          });
+          define("jquery",
+            ["ember"],
+            function(__dependency1__) {
+              factory(__dependency1__);
+            });
         } else if (typeof exports === 'object') {
-          factory(require('ember'));
+          factory(require("ember"));
+        } else {
+          throw new Error('root UMD compilation not yet implemented');
         }
-      }(function (exports, __dependency1__) {
+      }(function(__dependency1__) {
+        "use strict";
         var get = __dependency1__.get;
         var set = __dependency1__.set;
       }));
@@ -134,15 +163,20 @@ describe "Compiler (toUMD)", ->
     shouldCompileUMD """
       import { get, set } from 'ember';
     """, """
-      (function (factory) {
+      (function(factory) {
         if (typeof define === 'function' && define.amd) {
-          define(['ember'], function (__dependency1__) {
-            factory(__dependency1__);
-          });
+          define("jquery",
+            ["ember"],
+            function(__dependency1__) {
+              factory(__dependency1__);
+            });
         } else if (typeof exports === 'object') {
-          factory(require('ember'));
+          factory(require("ember"));
+        } else {
+          throw new Error('root UMD compilation not yet implemented');
         }
-      }(function (exports, __dependency1__) {
+      }(function(__dependency1__) {
+        "use strict";
         var get = __dependency1__.get;
         var set = __dependency1__.set;
       }));
@@ -152,15 +186,20 @@ describe "Compiler (toUMD)", ->
     shouldCompileUMD """
       import _ from "underscore";
     """, """
-      (function (factory) {
+      (function(factory) {
         if (typeof define === 'function' && define.amd) {
-          define(['underscore'], function (_) {
-            factory(_);
-          });
+          define("jquery",
+            ["underscore"],
+            function(_) {
+              factory(_);
+            });
         } else if (typeof exports === 'object') {
-          factory(require('underscore'));
+          factory(require("underscore"));
+        } else {
+          throw new Error('root UMD compilation not yet implemented');
         }
-      }(function (_) {
+      }(function(_) {
+        "use strict";
       }));
     """
 
@@ -168,15 +207,20 @@ describe "Compiler (toUMD)", ->
     shouldCompileUMD """
       import undy from 'underscore';
     """, """
-      (function (factory) {
+      (function(factory) {
         if (typeof define === 'function' && define.amd) {
-          define(['underscore'], function (undy) {
-            factory(undy);
-          });
+          define("jquery",
+            ["underscore"],
+            function(undy) {
+              factory(undy);
+            });
         } else if (typeof exports === 'object') {
-          factory(require('underscore'));
+          factory(require("underscore"));
+        } else {
+          throw new Error('root UMD compilation not yet implemented');
         }
-      }(function (undy) {
+      }(function(undy) {
+        "use strict";
       }));
     """
 
@@ -184,15 +228,20 @@ describe "Compiler (toUMD)", ->
     shouldCompileUMD """
       import { View as EmView } from 'ember';
     """, """
-      (function (factory) {
+      (function(factory) {
         if (typeof define === 'function' && define.amd) {
-          define(['ember'], function (__dependency1__) {
-            factory(__dependency1__);
-          });
+          define("jquery",
+            ["ember"],
+            function(__dependency1__) {
+              factory(__dependency1__);
+            });
         } else if (typeof exports === 'object') {
-          factory(require('ember'));
+          factory(require("ember"));
+        } else {
+          throw new Error('root UMD compilation not yet implemented');
         }
-      }(function (__dependency1__) {
+      }(function(__dependency1__) {
+        "use strict";
         var EmView = __dependency1__.View;
       }));
     """
@@ -201,15 +250,20 @@ describe "Compiler (toUMD)", ->
     shouldCompileUMD """
       import { View as EmView, default as Ember } from 'ember';
     """, """
-      (function (factory) {
+      (function(factory) {
         if (typeof define === 'function' && define.amd) {
-          define(['ember'], function (__dependency1__) {
-            factory(__dependency1__);
-          });
+          define("jquery",
+            ["ember"],
+            function(__dependency1__) {
+              factory(__dependency1__);
+            });
         } else if (typeof exports === 'object') {
-          factory(require('ember'));
+          factory(require("ember"));
+        } else {
+          throw new Error('root UMD compilation not yet implemented');
         }
-      }(function (__dependency1__) {
+      }(function(__dependency1__) {
+        "use strict";
         var EmView = __dependency1__.View;
         var Ember = __dependency1__;
       }));
@@ -219,15 +273,20 @@ describe "Compiler (toUMD)", ->
     shouldCompileUMD """
       export { ajax, makeArray } from "jquery";
     """, """
-      (function (factory) {
+      (function(factory) {
         if (typeof define === 'function' && define.amd) {
-          define(['jquery'], function (__reexport1__) {
-            factory(__reexport1__);
-          });
+          define("jquery",
+            ["jquery","exports"],
+            function(__reexport1__, exports) {
+              factory(__reexport1__,exports);
+            });
         } else if (typeof exports === 'object') {
-          factory(require('jquery'));
+          factory(require("jquery"),exports);
+        } else {
+          throw new Error('root UMD compilation not yet implemented');
         }
-      }(function (__reexport1__) {
+      }(function(__reexport1__, exports) {
+        "use strict";
         exports.ajax = __reexport1__.ajax;
         exports.makeArray = __reexport1__.makeArray;
       }));

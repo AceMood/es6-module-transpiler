@@ -35,25 +35,22 @@ normalize = (input, output, name, options={}) ->
   compiler = new Compiler(unindent(input), name, options)
   return [ unindent(output), compiler ]
 
-shouldCompileAMD = (input, output, options={}) ->
+shouldCompile = (input, output, options, type) ->
   name = if options.anonymous then null else 'jquery'
   [ output, compiler ] = normalize input, output, name, options
-  expect(stripTrailingNewlines compiler.toAMD()).toEqual(output)
+  expect(stripTrailingNewlines compiler["to#{type}"]()).toEqual(output)
+
+shouldCompileAMD = (input, output, options={}) ->
+  shouldCompile input, output, options, 'AMD'
 
 shouldCompileUMD = (input, output, options={}) ->
-  name = if options.anonymous then null else 'jquery'
-  [ output, compiler ] = normalize input, output, name, options
-  expect(stripTrailingNewlines compiler.toUMD()).toEqual(output)
+  shouldCompile input, output, options, 'UMD'
 
 shouldCompileCJS = (input, output, options={}) ->
-  name = if options.anonymous then null else 'jquery'
-  [ output, compiler ] = normalize input, output, name, options
-  expect(stripTrailingNewlines compiler.toCJS()).toEqual(output)
+  shouldCompile input, output, options, 'CJS'
 
 shouldCompileGlobals = (input, output, options={}) ->
-  name = if options.anonymous then null else 'jquery'
-  [ output, compiler ] = normalize input, output, name, options
-  expect(stripTrailingNewlines compiler.toGlobals()).toEqual(output)
+  shouldCompile input, output, options, 'Globals'
 
 shouldRaise = (input, message, options={}) ->
   compiler = new Compiler(input, 'jquery', options)
